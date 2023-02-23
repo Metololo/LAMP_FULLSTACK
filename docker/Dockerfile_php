@@ -1,0 +1,9 @@
+FROM php:fpm-alpine
+
+RUN apk add --no-cache $PHPIZE_DEPS \
+    && apk add --update linux-headers \
+    && pecl install -f -o xdebug \
+    && docker-php-ext-enable xdebug \
+    && docker-php-ext-install mysqli pdo pdo_mysql
+
+WORKDIR /var/www

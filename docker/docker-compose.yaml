@@ -1,0 +1,36 @@
+version: '3.8'
+
+services:
+  php:
+    build:
+      context: ./
+      dockerfile: Dockerfile_php
+    container_name: php-app
+    restart: always
+    working_dir: /var/www
+    volumes:
+      - ../src:/var/www
+  nginx:
+    image: nginx:alpine
+    container_name: nginx
+    restart: always
+    ports:
+      - "8001:80"
+    volumes:
+      - ../src:/usr/share/nginx/html
+      - ./nginx:/etc/nginx/conf.d:ro
+    command: [ nginx-debug,'-g','daemon off;' ]
+  db:
+    image: mysql:8.0.32-debian
+    container_name: mysql-serv
+    restart: always
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: 123
+  phpmyadmin:
+    image: phpmyadmin
+    restart: always
+    container_name: pma
+    ports:
+      - "8002:80"
